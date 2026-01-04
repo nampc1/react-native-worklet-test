@@ -5,11 +5,11 @@ const chainConfigs = () => {
       blockchain: 'ethereum',
       provider: 'https://eth.llamarpc.com',
     },
-    'bitcoin-testnet': {
-      network: 'testnet',
-      host: 'electrum.blockstream.info',
-      port: '50001',
-    },
+    // 'bitcoin-testnet': {
+    //   network: 'testnet',
+    //   host: 'electrum.blockstream.info',
+    //   port: '50001',
+    // },
     // polygon: {
     //   chainId: 137, // Sepolia
     //   blockchain: 'polygon',
@@ -38,7 +38,7 @@ const chainConfigs = () => {
     //     address: '0xFa5854FBf9964330d761961F46565AB7326e5a3b',
     //   }
     // },
-    spark: {},
+    // spark: {},
   };
 };
 // const getChainsConfig = () => {
