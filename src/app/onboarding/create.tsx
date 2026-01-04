@@ -9,14 +9,16 @@ export default function CreateWallet() {
   const router = useRouter();
   const { initializeWallet, isInitializing, error } = useWalletSetup(chainConfigs());
   const { mnemonic, isLoading: mnemonicLoading, error: mnemonicError } = useMnemonic();
+  const [created, setCreated] = useState(false);
 
   useEffect(() => {
-    console.log("CreateWallet debug:", { mnemonic: !!mnemonic, mnemonicLoading, mnemonicError });
-  }, [mnemonic, mnemonicLoading, mnemonicError]);
+    console.log("CreateWallet debug:", { mnemonic: !!mnemonic, mnemonicLoading, mnemonicError, created });
+  }, [mnemonic, mnemonicLoading, mnemonicError, created]);
 
   const handleGenerate = async () => {
     try {
       await initializeWallet({ createNew: true });
+      setCreated(true);
     } catch (e) {
       console.error("Failed to initialize wallet", e);
     }
@@ -30,7 +32,7 @@ export default function CreateWallet() {
     <ScrollView style={styles.container}>
        <Text style={styles.label}>Recovery Phrase</Text>
        
-       {!mnemonic ? (
+       {!mnemonic && !created ? (
          <View style={styles.placeholderBox}>
             {mnemonicLoading ? (
                 <Text style={styles.placeholderText}>Loading phrase...</Text>
@@ -48,16 +50,18 @@ export default function CreateWallet() {
          </View>
        ) : (
          <View style={styles.mnemonicBox}>
-           <Text style={styles.mnemonicText}>{mnemonic}</Text>
+           <Text style={styles.mnemonicText}>
+             {mnemonic || "Wallet created successfully. Recovery phrase hidden for security."}
+           </Text>
          </View>
        )}
 
        {error ? <Text style={styles.errorText}>Init Error: {error}</Text> : null}
        {mnemonicError ? <Text style={styles.errorText}>Mnemonic Error: {mnemonicError.message || String(mnemonicError)}</Text> : null}
 
-       {mnemonic && (
+       {(mnemonic || created) && (
          <TouchableOpacity onPress={handleContinue} style={styles.button}>
-            <Text style={styles.buttonText}>{'Create Wallet'}</Text>
+            <Text style={styles.buttonText}>{'Continue to Wallet'}</Text>
          </TouchableOpacity>
        )}
     </ScrollView>
