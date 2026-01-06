@@ -3,7 +3,7 @@ import { useWdkApp, AppStatus } from '@tetherto/wdk-react-native-core'
 import { colors } from '@/constants/colors';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Wallet, Layers, Component, ChevronRight, CheckCircle2, XCircle } from 'lucide-react-native';
+import { Wallet, Layers, Component, ChevronRight, CheckCircle2, XCircle, Settings } from 'lucide-react-native';
 
 const FeatureGroup = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
   <View style={styles.groupContainer}>
@@ -53,7 +53,6 @@ export default function App() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         
-        {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.illustrationContainer}>
             <Image
@@ -77,20 +76,17 @@ export default function App() {
           </View>
         </View>
 
-        {/* Feature Groups */}
         <View style={styles.groupsContainer}>
-          
-          {/* Group 1: Wallet Modules */}
           <FeatureGroup 
             title="Wallet Modules" 
             icon={<Wallet size={20} color={colors.primary} />}
           >
-            <FeatureItem title="Get Address" route="/features/core/get-address" />
-            <FeatureItem title="Sign Message" route="/features/core/sign-message" />
-            <FeatureItem title="Verify Signature" route="/features/core/verify-signature" />
+            <FeatureItem title="Manage Accounts" route="/features/wallet/manage-account" />
+            <FeatureItem title="Get Address" route="/features/wallet/get-account" />
+            <FeatureItem title="Get Balance" route="/features/wallet/get-balance" />
+            <FeatureItem title="Sign & Verify" route="/features/wallet/sign-message" />
           </FeatureGroup>
 
-          {/* Group 2: Protocol Modules */}
           <FeatureGroup 
             title="Protocol Modules" 
             icon={<Layers size={20} color={colors.primary} />}
@@ -99,14 +95,19 @@ export default function App() {
             <FeatureItem title="Lending" route="/features/protocols/lending" />
           </FeatureGroup>
 
-          {/* Group 3: Middleware */}
           <FeatureGroup 
             title="Middleware" 
             icon={<Component size={20} color={colors.primary} />}
           >
-            <FeatureItem title="Gas Station (Paymaster)" route="/features/middleware/paymaster" />
+            <FeatureItem title="Pricing Service" route="/features/middleware/pricing" />
           </FeatureGroup>
 
+          <FeatureGroup 
+            title="System & Config" 
+            icon={<Settings size={20} color={colors.primary} />}
+          >
+            <FeatureItem title="View Configuration" route="/features/config/view-config" />
+          </FeatureGroup>
         </View>
       </ScrollView>
     </View>
@@ -135,8 +136,7 @@ const styles = StyleSheet.create({
   },
   illustrationContainer: {
     width: '100%',
-    alignItems: 'center',
-    marginBottom: 24,
+    alignItems: 'center'
   },
   wdkLogo: {
     width: 180, 
@@ -233,5 +233,5 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     color: colors.text,
-  },
+  }
 });
