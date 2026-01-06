@@ -1,34 +1,237 @@
-import { ActivityIndicator, View } from 'react-native'
-import { useWorklet } from '@tetherto/wdk-react-native-core'
+import { ActivityIndicator, View, StyleSheet, ScrollView, Image, TouchableOpacity, Text } from 'react-native'
+import { useWdkApp, AppStatus } from '@tetherto/wdk-react-native-core'
 import { colors } from '@/constants/colors';
-import { Redirect } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Wallet, Layers, Component, ChevronRight, CheckCircle2, XCircle } from 'lucide-react-native';
 
-// todo: init pricing service
+const FeatureGroup = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
+  <View style={styles.groupContainer}>
+    <View style={styles.groupHeader}>
+      {icon}
+      <Text style={styles.groupTitle}>{title}</Text>
+    </View>
+    <View style={styles.groupContent}>
+      {children}
+    </View>
+  </View>
+);
+
+const FeatureItem = ({ title, route }: { title: string, route: string }) => {
+  const router = useRouter();
+  return (
+    <TouchableOpacity 
+      style={styles.item} 
+      onPress={() => router.push(route as any)}
+    >
+      <Text style={styles.itemText}>{title}</Text>
+      <ChevronRight size={16} color={colors.textSecondary} />
+    </TouchableOpacity>
+  );
+};
+
+const StatusBadge = ({ label, active }: { label: string, active: boolean }) => (
+  <View style={[styles.badge, active ? styles.badgeActive : styles.badgeInactive]}>
+    {active ? <CheckCircle2 size={12} color={colors.black} /> : <XCircle size={12} color={colors.textSecondary} />}
+    <Text style={[styles.badgeText, active && styles.badgeTextActive]}>{label}</Text>
+  </View>
+);
 
 export default function App() {
-  const { isInitialized, encryptedSeed, isLoading } = useWorklet();
+  const { isInitializing, status, workletState, walletState } = useWdkApp();
+  const insets = useSafeAreaInsets();
 
-  if (isLoading) {
+  if (isInitializing) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: colors.background,
-        }}
-      >
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
-  // Redirect based on wallet existence and unlock status
-  if (!encryptedSeed) {
-    return <Redirect href="/onboarding" />;
-  }
+  return (
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        
+        {/* Header Section */}
+        <View style={styles.header}>
+          <View style={styles.illustrationContainer}>
+            <Image
+              source={require('../../assets/images/wdk-logo.png')}
+              style={styles.wdkLogo}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.title}>WDK Starter App</Text>
+          <Text style={styles.subtitle}>
+            Explore the unified capabilities of the Wallet Development Kit.
+          </Text>
+          
+          <View style={styles.statusContainer}>
+            <Text style={styles.statusLabel}>WDK Lifecycle Status:</Text>
+            <View style={styles.badges}>
+              <StatusBadge label="Worklet Ready" active={workletState.isReady} />
+              <StatusBadge label={`Wallet: ${walletState.status}`} active={walletState.status === 'ready'} />
+              <StatusBadge label={`App: ${status}`} active={status === AppStatus.READY} />
+            </View>
+          </View>
+        </View>
 
-  // If wallet exists but is not initialized (unlocked), go to authorization
-  // If wallet is already initialized (e.g., just created/imported), go directly to wallet
-  return <Redirect href={isInitialized ? '/wallet' : '/authorize'} />;
+        {/* Feature Groups */}
+        <View style={styles.groupsContainer}>
+          
+          {/* Group 1: Wallet Modules */}
+          <FeatureGroup 
+            title="Wallet Modules" 
+            icon={<Wallet size={20} color={colors.primary} />}
+          >
+            <FeatureItem title="Get Address" route="/features/core/get-address" />
+            <FeatureItem title="Sign Message" route="/features/core/sign-message" />
+            <FeatureItem title="Verify Signature" route="/features/core/verify-signature" />
+          </FeatureGroup>
+
+          {/* Group 2: Protocol Modules */}
+          <FeatureGroup 
+            title="Protocol Modules" 
+            icon={<Layers size={20} color={colors.primary} />}
+          >
+            <FeatureItem title="Token Swap" route="/features/protocols/swap" />
+            <FeatureItem title="Lending" route="/features/protocols/lending" />
+          </FeatureGroup>
+
+          {/* Group 3: Middleware */}
+          <FeatureGroup 
+            title="Middleware" 
+            icon={<Component size={20} color={colors.primary} />}
+          >
+            <FeatureItem title="Gas Station (Paymaster)" route="/features/middleware/paymaster" />
+          </FeatureGroup>
+
+        </View>
+      </ScrollView>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    marginBottom: 32,
+    alignItems: 'flex-start',
+  },
+  illustrationContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  wdkLogo: {
+    width: 180, 
+    height: 180,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    lineHeight: 22,
+    marginBottom: 20,
+  },
+  statusContainer: {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    padding: 12,
+    borderRadius: 12,
+    width: '100%',
+  },
+  statusLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginBottom: 8,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  },
+  badges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 6,
+    borderWidth: 1,
+  },
+  badgeActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  badgeInactive: {
+    backgroundColor: 'transparent',
+    borderColor: colors.border,
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  badgeTextActive: {
+    color: colors.black,
+  },
+  groupsContainer: {
+    paddingHorizontal: 20,
+    gap: 24,
+  },
+  groupContainer: {
+    gap: 12,
+  },
+  groupHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingLeft: 4,
+  },
+  groupTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  groupContent: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.05)',
+  },
+  itemText: {
+    fontSize: 16,
+    color: colors.text,
+  },
+});
