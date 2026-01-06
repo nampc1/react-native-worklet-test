@@ -84,6 +84,7 @@ export default function App() {
             <FeatureItem title="Manage Accounts" route="/features/wallet/manage-account" />
             <FeatureItem title="Get Address" route="/features/wallet/get-account" />
             <FeatureItem title="Get Balance" route="/features/wallet/get-balance" />
+            <FeatureItem title="Send Fund" route="/features/wallet/send-fund" />
             <FeatureItem title="Sign & Verify" route="/features/wallet/sign-message" />
           </FeatureGroup>
 
@@ -91,7 +92,7 @@ export default function App() {
             title="Protocol Modules" 
             icon={<Layers size={20} color={colors.primary} />}
           >
-            <FeatureItem title="Token Swap" route="/features/protocols/swap" />
+            <FeatureItem title="Swap" route="/features/protocols/swap" />
             <FeatureItem title="Lending" route="/features/protocols/lending" />
           </FeatureGroup>
 
@@ -100,6 +101,7 @@ export default function App() {
             icon={<Component size={20} color={colors.primary} />}
           >
             <FeatureItem title="Pricing Service" route="/features/middleware/pricing" />
+            <FeatureItem title="Indexer" route="/features/middleware/indexer" />
           </FeatureGroup>
 
           <FeatureGroup 
