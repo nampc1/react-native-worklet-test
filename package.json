@@ -1,28 +1,18 @@
 {
   "private": true,
-  "name": "bare-expo",
-  "description": "Example of embedding Bare in an Expo application",
+  "name": "wdk-react-native-showcase",
+  "description": "Showcase application for WDK (Wallet Development Kit) features in React Native",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/holepunchto/bare-expo.git"
-  },
-  "author": "Holepunch",
+  "author": "Tether",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/holepunchto/bare-expo/issues"
-  },
-  "homepage": "https://github.com/holepunchto/bare-expo#readme",
   "dependencies": {
     "@tetherto/wdk-react-native-core": "/home/nampc/dev/tether/wdk-react-native-core-fork/tetherto-wdk-react-native-core-1.0.0.tgz",
     "@tetherto/wdk-uikit-react-native": "^1.0.0-beta.2",
-    "b4a": "^1.6.7",
-    "bare-rpc": "^1.1.0",
     "expo": "^54.0.10",
     "expo-build-properties": "^1.0.9",
     "expo-splash-screen": "~31.0.10",
@@ -35,8 +25,6 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "^0.81.4",
-    "react-native-b4a": "^0.0.4",
-    "react-native-bare-kit": "^0.11.0",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-svg": "^15.15.1",
@@ -45,12 +33,8 @@
   "devDependencies": {
     "@types/react": "~19.1.10",
     "babel-plugin-module-resolver": "^5.0.2",
-    "bare-pack": "^1.5.1",
     "prettier": "^3.3.3",
     "prettier-config-standard": "^7.0.0",
     "typescript": "^5.3.3"
-  },
-  "overrides": {
-    "bare-module-traverse": "1.8.2"
   }
 }

@@ -61,7 +61,7 @@ export default function App() {
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.title}>WDK Starter App</Text>
+          <Text style={styles.title}>WDK Showcase App</Text>
           <Text style={styles.subtitle}>
             Explore the unified capabilities of the Wallet Development Kit.
           </Text>
